@@ -1,0 +1,51 @@
+
+```{r}
+library(png)
+library(knitr)
+library(grid)
+include_graphics("N:/GIS/assignment1_v2_GUI.png.png")
+include_graphics("N:/GIS/assignment1_v2.png.png")
+```
+
+##Assignment, part 1, GIS 
+
+#Benefits and drawbacks 
+
+When starting on any new skill, the learning curve is of vital importance. In the case of GUI vs Command line (CLI) cartography - it is the general consensus that GUI is much more intuitive and easy to pick up. In comparsion, the CLI is much more complex to pick up and would typically require previous knowledge of coding.  Having said that, in my experience of using the 2 different pieces of software, I found the R-based CLI version much easier. This was because I do have previous experience with other coding languages - so the methodology felt much more familiar. GUI in ArcMap on the otherhand, felt foreign and constrictive. 
+
+#Planning of the map
+One the key pieces of literature on cartographic good practice is Krygier's and Wood's book Making Maps. The general things to consider when planning a map are: 
+- Purpose
+- Audience (knowledge, take-away message, context)
+- Data (choosing appropriate sources, scale, limitations)
+- Design (contrast, legibility) 
+- Labelling (title, scale, key) 
+
+Recent research has shown that among GIS professionals, the application of best practice is still not widely adopted - instead allowing the default standards of the chosen software to dictate the final product (2)
+
+A further limitation to both these methods is the prohibitive nature of using commercial tools. With movement towards not only open source, but also open standard - its all well and good publishing a workflow, but if there is the monitory barrier to uptake - then this provides a significant problem.  The adoption of open standards, not only removes that barrier, but also removes the barrier of inter-operability. (3) The Open Geospatial Consortium was founded in 1994 in response to pent-up demand in the government and industry to solve the issue of spatial data sharing and interoperability. GML, KML, WMS are all open standards. (4)
+
+
+Accessibility is a key aspect to consider when designing maps, this includes users with low vision, dyslexia, physical or motor disabilities and so on (5). Therefore, the following measures were taken:
+- Simple colours
+- Plain English
+- Colours visible for the colour-blind
+- Consistent layouts
+
+However, there were limitations on what was achieved with these maps which reduces their accessibility
+- Not tested or reviewed on screen readers or mobile devices 
+- HTML5 not used
+
+Workflow
+The workflow for each map was based on Carto's Best Practices Checklist (6)
+
+
+References
+(1) https://www.esri.com/arcgis-blog/products/product/mapping/design-principles-for-cartography/
+(2) https://scholarworks.sjsu.edu/cgi/viewcontent.cgi?referer=https://www.google.com/&httpsredir=1&article=8276&context=etd_theses
+(3)
+https://www.oreilly.com/library/view/web-mapping-illustrated/0596008651/ch01s02.html 
+(4) 
+https://www.e-education.psu.edu/geog583/node/64 
+(5)
+https://accessibility.blog.gov.uk/2016/09/02/dos-and-donts-on-designing-for-accessibility/ 
