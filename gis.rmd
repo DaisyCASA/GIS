@@ -1,0 +1,1065 @@
+---
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+------------------------------------------------------------------------------------------
+
+#Part 1 of submission
+
+------------------------------------------------------------------------------------------
+
+###Benefits and drawbacks 
+When starting any new skill, the learning curve is of vital importance. In the case of GUI vs Command line (CLI) cartography – it is the general consensus that GUI is much more intuitive and easy to pick up. In comparison, the CLI is much more complex and would typically require previous knowledge of coding. As an individual who has this previous knowledge, I found the R-based CLI (Figure 2) much easier and this is mainly down to the structured provision of documentation related to libraries and the extensive knowledge provided on coding forums such as Stackoverflow. GUI in ArcMap (Figure 3) on the other hand, felt foreign and constrictive in the initial instance - requiring a certain amount of time to get used to the programme and its set-up. However, I did find that once I felt more comfortable with the format, some basic functions were much easier, such as zooming and changing colours - which requires continual re-coding in R. 
+
+###Planning of the map
+One of the key pieces of literature on cartographic good practice is Krygier and Wood’s book Making Maps (2016). Using this with other literature (Buckley, 2011), the general things to consider when planning a map are: 
+
+- Purpose
+- Audience (knowledge, take-away message, context)
+- Data (choosing appropriate sources, scale, limitations)
+- Design (contrast, legibility) 
+- Labelling (title, scale, key) 
+
+Recent research has shown that among GIS professionals, the application of best practice is still not widely adopted – instead allowing the default standards of the chosen software to dictate the final product (Medeiros, 2016). As such, I designed the workflow below to ensure best practice was maintained throughout the creation of the two maps. 
+
+###Workflow
+The workflow for each map was based on Carto’s Best Practices Checklist (CARTO, 2016)
+
+![Figure 1: Workflow used for map creation](/Users/daisywain/Downloads/images-2/workflow.png)
+
+
+Following on from the workflow, here a few of those steps in greater detail
+
+###Data (step 2 & 3)
+Data quality and reliability is vitally important for both methodologies - requiring exact spatial formats to allow for map production, but also for the data to come from a reputable source (such as data.gov.uk, as used for both) to ensure the ‘take-away’ message is correct. If you were to use data that didn’t have the correct spatial formatting, it would be possible to join it with a second database containing the correct information - but would require a common join (such as local authority name) and would therefore take more time and have a greater chance of human error (e.g. missing out values because the common join is not exactly the same).
+
+###Design & Audience (step 1 & 4)
+Design for me is mainly based around accessibility for all. This includes users with the assumed level of knowledge (for these maps it was a non-technical, general audience) and those with potential impairments such as low vision, dyslexia, physical or motor disabilities and so on (GOV.UK, 2016). Therefore, the following measures were taken from the Web Content Accessibility Guidelines (Web Accessibility Initiative, 2018):
+
+- Simple colours
+- Plain English
+- Colours visible for the colour-blind
+- Consistent, familiar layouts
+
+However, there were limitations on what was achieved with these maps which reduces their accessibility. 
+
+- Not tested or reviewed on screen readers or mobile devices 
+- HTML5 not used
+
+###Critical review of final maps
+
+Strengths
+
+-      Simplicity 
+-      Informative labelling 
+
+Weaknesses
+
+-      Colouring the map was a challenge when the data range is close together 
+-      As the audience is of general knowledge, labelling the boroughs could have added value in understanding the data. However, due to the proximity to of the boroughs one-another, labelling often added to its complexity - so was left out.
+
+![Figure 2: Map of statutory homelessness per London borough (2017-2018), shown as a rate per 1,000 people - created using R](/Users/daisywain/Downloads/images-2/cw1_map.png)
+
+![Figure 3: Map of the mean age of residents per London borough (2013) - created using ArcGIS](/Users/daisywain/Downloads/images-2/cw2_map2.png)
+
+###References
+
+
+Buckley, A. (2011). Design principles for cartography. Available: https://www.esri.com/arcgis-blog/products/product/mapping/design-principles-for-cartography/. Last accessed 30/12/2018.
+
+CARTO. (Undated). Best Practices Checklist for Creating Maps with CARTO. Available: https://carto.com/docs/tips-and-tricks/best-practices-checklist/. Last accessed 30/12/2018.
+
+GOV.UK. (2016). Dos and don'ts on designing for accessibility. Available: https://accessibility.blog.gov.uk/2016/09/02/dos-and-donts-on-designing-for-accessibility/ . Last accessed 30/12/2018.
+
+Krygier, J. & Wood, D. (2016). Making Maps: A Visual Guide to Map Design for GIS, 3rd Edition. 
+
+Medeiros, D. (2016). "Pre y maps: evaluating GIS adoption of cartographic design standards and best practices in professional publications". Master's  eses. 4729.
+
+Web Accessibility Initiative. (2018). Web Content Accessibility Guidelines (WCAG) Overview. Available: https://www.w3.org/WAI/standards-guidelines/wcag/. Last accessed 30/12/2018.
+
+------------------------------------------------------------------------------------------
+
+#Part 2 of submission
+
+------------------------------------------------------------------------------------------
+
+###Software used
+ArcGIS to allow for the ease of layering the data, as well as the built-in analysis tools
+
+###Data sets used 
+- London Ward boundaries (shp)
+- Trajectory of movement (geoJSON)
+- Location of railway stations (KML)
+- Treasure hunt locations - using the API to get CSV locations
+
+###Loading the data
+1) Convert the railway stations data using the KML to Layer conversion tool, as KML is not a supported file type in ArcGIS. Once the new layer was inputted - the symbology was changed to allow for easier visual analysis. All data points were reduced from size 24 to 4. 
+2) Add in treasure hunt locations - there were two ways to do this, using the Import XY data or Make XY Event Layer Tool. I chose the latter as I found the Import XY data harder to use, using the geoJSON file (rather than shapefile). This event layer was then exported and inputted into the Project tool, to transform the spherical coordinates into planar.
+3) London Ward data had to be edited to allow for the City of London (vital as the trajectory goes right through that location).
+4) Trajectory file via ArcCatalog 
+5) Coordinate systems were important to be aware of, and I used the British National Grid & WGS 1984
+
+###Answers
+1) 46.59km
+2) 24
+3) 16 hunt locations, totalling 55 points
+4) Highest = City of London, Lowest = Tower Hamlets and Islington
+5) Male life expectancy = 79.9, female = 84.5
+6) Index: 0.24, z score: 2.33, p score: 0.02 - a significant relationship
+
+###Workings out
+1) Using the Measure tool to Measure a Feature (the geoJSON trajectory) - and converting the distance from metres into kilometres.
+2) Using the London Ward layer as a central database, the London Borough data was merged using the dissolved tool. A buffer was then inputted around the trajectory using the buffer tool, from here the quantity of London tubes could be calculated
+3) Using the same merged map from Q2, the hunt locations were now added. To allow for better analysis of the map, labels were included for each of the data points showing the point value for each. 
+4) A new dissolved map was created for this question, including the male and female life expectancy (as it will also be used for Q5). From this, a choropleth map was created, easily showing the highest and lowest life expectancy results. 
+5) Similar process as above, repeating for female
+6) First needed to project the data for a projected coordinate system (British National Grid), then Spatial Autocorrelation (Global Moran's I) to see whether there is any spatial correlation between the hunt locations.
+
+###Critical analysis
+1) There are more sophisticated methodologies to complete some of this work, as if it was conducted at a larger scale, it would be too time consuming. However, these methodologies were chosen based on current knowledge of ArcGIS and limits on time (in terms of sufficient time to learn more complicated ways)
+2) There was a limitation in terms of the reliability of the data - as it was collected by another group, an initial assumption that it is correct and not biased had to be made. 
+3) Limitations of the data and software in terms of the actual trajectory. Point and line data has been used to create the trajectory, but it is extremely unlikely that this was the reality of the route taken. Therefore, there is a chance that some important information has been missed. For example, a number of treasure hunt locations and tube stops were just outside the border of the buffer - so any small changes could have completely altered the results of questions 2 and 3.
+
+------------------------------------------------------------------------------------------
+
+#Part 3 of submission
+
+------------------------------------------------------------------------------------------
+
+*Author's note: For transparency and reproducibility all the R code used for this report is supplied at the end of the document, and follows the same workflow as in the main report.*
+
+##A buyer’s dilemma of quality versus price:
+##In which wine producing countries does the price of wine have the biggest impact on its quality?
+
+
+###Introduction
+Wine has been produced and enjoyed globally since its discovery about 6,000 years ago in Iran in the Middle East (Go-Wine, 2018). Nowadays, the global wine market is valued at $302.02 billion and is expected to grow to $423.59 billion by the end of 2023 (Zion Market Research, 2018). 
+This broken down is an industry made up of 150,000 winemakers, producing over 36 billion bottles of wine a year (Dee-Wine, 2016) and a market consuming 242 million hectolitres a year – with the biggest consumers being USA, France and Italy (Wine Institute, 2017, Statista, 2018). But what does this mean for consumers?
+
+Well, this means that as consumers, we are frequently confronted with an extensive array of choices at hugely different price points – be this in the supermarket, in a restaurant, online and so on. While there are those well-versed in the industry, with the knowledge to choose wisely – the majority of us have to rely on extrinsic quality cues, such as brand name, price, advertisement, labelling etc (Piqueras-Fiszman & Spence, 2012). The aim of this report is to spatially explore the potential linear relationship between price and quality of wine. To establish the countries and regions where there is the strongest (and weakest) relationship between these 2 variables. This should provide the consumer some context and knowledge to inform their next purchase. Which wines should you invest more money in to gain better quality, and which ones does price have very little impact on? The hypothesis of this report is that there will be some countries and regions where this relationship is stronger and therefore, investment is recommended.
+
+
+###The data
+The data used in this report has been scraped from the WineEnthusiast website in November 2017 and has been accessed via the Kaggle website (Kaggle, 2017). It contains 130,000 individual wine reviews from across the globe, from a community of reviewers and for each review there are 14 variables in the dataset (Figure 1).
+
+![Figure 1: Table showing the 14 variables of the WineEnthusiast dataset, November 2017.](/Users/daisywain/Downloads/images-2/variables.png)
+
+A number of reports and models have already been conducted on the data set, but the majority focus on sentiment analysis of the text review data. At the time of writing, there was no research into the statistical relationship between between Country, Province, Points and Price. 
+
+
+###Limitations 
+There are a number of limitations of the data that should be initially detailed and kept in mind during analysis. 
+
+* The data appears to only cover ‘good’ wines i.e. those with high points
+* Large dataset but an uneven spread of global reviews
+* Poor spatial data: universal location codes or names have not been used in this dataset - this is likely to limit what can realistically be mapped.
+
+
+###Method 
+This report shall be conducted entirely in R, including data exploration and visualisation, statistical analysis and map creation. 
+
+The first stage of the analysis will be an initial exploration of the data with the view to remove any duplicate records or any incomplete reviews and an initial visualisation of the global data (specifically looking at price and point averages). To facilitate this, I will need to join the dataset to ISO3 country codes (UN International Trade Statistics Knowledgebase, 2016).  
+
+The second stage will be to produce a number of descriptive statistics, including plotting a distribution curve and boxplots. This will be to see whether price and points have a normal distribution (suitable for the final stage of analysis) and to identify any potential outliers in the data set, which may skew any future results. 
+
+The third and final stage will be to create a linear regression model, that firstly checks to see whether there is a statistically significant relationship between price and points (p-value) and secondly to calculate the correlation of the coefficient (r2). From this, I will be able to identify the countries with the strongest and weakest relationships, and to test my hypothesis. From here, I will retrain the model to look at the top 3 countries with the strongest relationship, looking into specific provinces to determine the best wine locations to invest in and these results shall again been plotted on a map, and will therefore require joining to a GADM dataset (GADM, 2018).
+
+##Results and discussion
+###Stage 1
+When checking for duplicates, the variable best suited for determining those would be Description as it contains a free text field where the reviewer can add in there own views and opinions. I hypothesised that it would be extremely unlikely that 2 reviews would be totally identical, and therefore, should this occur – would be the sign of a duplicate record and should be removed. Through this, over 10,000 reviews were identified and removed.
+
+Next was to check for missing data fields for our 4 key variables. None were found for Country, Province or Points, but there were 8388 records with missing price data – and were subsequently removed.
+
+Now I have my complete dataset. I joined this table to the ISO3 country codes records. All records bar 1 joined automatically, just requiring a manual input for ‘England’ to GBR. 
+
+Below are the initial visualisations of the dataset, including the cost average per country (Figure 4), point average per country (Figure 3) and the quantity of reviews per country (Figure 2). When looking into these maps, the quantity of reviews per country (or Province in future calculations) is extremely important, as there is an inconsistent spread of reviews (Figure 2). For example, England ranks highly for both price and points – but there are only 63 reviews (see Table 1). This should be fully considered when looking at significance and confidence in the final results. 
+
+![Figure 2: Bar graph to show the global of distribution of wine reviews, visualising the top 10 results.](/Users/daisywain/Downloads/images-2/Country_reviews.png)
+
+
+![Figure 3: World map to show the average points per bottle of wine per country, with a bar graph to show the top 10.](/Users/daisywain/Downloads/images-2/map_points.png)
+
+
+![Figure 4: World map to show the average price per bottle of wine per country, with a bar graph to show the top 10.](/Users/daisywain/Downloads/images-2/map_price.png)
+
+###Stage 2
+When looking at the distribution curve for points, a normal distribution can be observed (Figure 5). The points boxplot allows us to see the global outliers, for example Italy clearly has the highest number of outliers, whereas Austria has none. It is also possible to compare the value ranges. We can see that the USA, Australia, France, and Italy have points that cover the full range from 80 to 100, but some countries, such as Chile have a maximum of 95 rating. While these are interesting observations, they wouldn’t have a significant impact on the results – therefore no changes to the dataset are required. 
+
+![Figure 5: Boxplot of countries points (showing outliers) and distribution curve of all point values given.](/Users/daisywain/Downloads/images-2/points.png)
+
+
+This is not the case for price (Figure 6). From both the distribution curve and the boxplot, it’s very clear to see that there a large number of outliers on the expensive end of the spectrum – with the most expensive bottle coming in at $3300.  When conducting a further exploration into the dataset, we can see that if we cap the value at $200, this still captures 99% of the reviews and allows for a better fit of the distribution curve (Figure 7). It should be noted that it is still not a perfect curve.
+
+
+![Figure 6: Boxplot of countries prices (showing outliers) and distribution curve of all price values given.](/Users/daisywain/Downloads/images-2/price1.png)
+
+
+![Figure 7: Retrained boxplot and distribution curve for price, removing all price reviews over $200](/Users/daisywain/Downloads/images-2/price2.png)
+
+The final exploration of the data was to plot all the reviews on a single scatter plot (Figure 8). Here we can observe a positive linear relationship between points and price using the line of best fit. 
+
+
+![Figure 8: Scatter plot of all reviews by points and price, with a line of best fit drawn.](/Users/daisywain/Downloads/images-2/Scatterplot.png)
+
+###Stage 3 
+Since there appears to be a linear relationship and the data (generally) has a normal distribution, the next stage was to run the linear model on all countries data (Table 1). From these results, a few key aspects should be discussed. Firstly, not all results fall within the significance threshold and therefore should be ignored. These are almost exclusively the countries with the fewest reviews – which is expected. Secondly, when looking at the lowest correlation (of those significant countries) – it is, by far, Greece. Meaning, when buying Greek wine – there is virtually no correlation between price and quality – therefore, always buy the cheaper option. On the other end of the scale are those with the highest correlation, namely Portugal (39%), South Africa (38%) and Italy (35%) – meaning 39% of the increase in quality of Portuguese wine can be attributed to the increase in cost. 
+
+![](/Users/daisywain/Downloads/images-2/table1.png)
+
+![Table 1: Table of the key values for each of the countries in the data set. These values have been used in Figures 3 & 4. The green highlighted rows are the 3 countries with the most significant price and quality relationship. The red highlighted row is the country with the weakest relationship.](/Users/daisywain/Downloads/images-2/table2.png)
+
+
+Next, the model was run at the Province level for the top 3 results. The analysis becomes slightly more complicated for Portugal and South Africa because they each have a significant amount of Provinces, with a number of them having an extremely low number of reviews. Therefore, a threshold was created where there had to be at least 10+ reviews for the model to be run, but to treat those low results with care. Below are the Provinces with the highest r2 values converted to a % (see Appendix for raw data):
+
+
+
+![Figure 9: Table of the provinces with the highest r2 value (converted to %, under the 0.05 significance level) for the top 3 countries.](/Users/daisywain/Downloads/images-2/provinces.png)
+
+
+
+When looking at the results, even though the South African wines showed some extremely promising results - I would be cautious in stating with confidence because of the comparatively low quantity of reviews. On the other hand, I am confident in the results for Portugal and Italy, especially for Veneto that has over 2000 reviews alone. 
+
+When looking to map the results for each of the top 3 countries, as expected, there were significant limitations caused by the spatial data present. GADM spatial data was used to facilitate the creation of a map in R (as a SpatialPolygonsDataFrame object), these datasets contain the administrative areas of all countries, at all levels of sub-division. 
+
+The biggest issue for all 3 countries was that there was no consistency in size of location - even though ‘Province’ was chosen, some were given broad locations such as ‘Northwestern Italy’ or ‘Coastal Region’, or too specific such as ‘Bot River’. The second issue was the inconsistent use of native names and English translations. The third issue was the subsequent inconsistency in sub-regions - it was not possible to cross reference with ‘Region_1’ or ‘Region_2’ because firstly, there were so many missing data points, and secondly - the data was even more inconsistent than ‘Province’ in terms of size or boundary.
+
+It was possible to work around these issues for the Italy dataset, as the level 1 GADM data contained 20 regions and the dataset from WineEnthusist contained 10. It was possible to cross reference the GADM data and fit the result data into those regions (Figure 10). This was not possible for Portugal or South Africa because of the irregular area definitions, inconsistent language used and a high quantity of missing data areas (see Appendix 1 and 2). 
+
+
+![Figure 10: Map of Italy, showing the r2 value as a % - fitting the WineEnthusiast  data to the GADM region data.](/Users/daisywain/Downloads/images-2/Italy_map.png)
+
+
+###Conclusion 
+To conclude, I can accept my hypothesis that there is global variation in the relationship between wine price and quality, and there are number of countries where this relationship is much stronger than others - namely Portugal, South Africa and Italy. This means that when you are considering the buyers dilemma, it is those countries (and more specifically the Provinces in Figure 9) where you should invest greater money to ensure better quality. On the flipside, there are also some countries where higher costs will not guarantee higher quality. This is especially true for Greek wine. 
+
+My top recommendation and conclusion - combining both the quantity of reviews and results from the models - would be to invest in wine from Douro in Portugal and Veneto in Italy, where 42% and 39% of the increase in quality of these regions wines can be attributed by the increase in cost. 
+
+One other point which is vital to the conclusion of this report is to always consider the quantity of reviews. Had this been ignored throughout this report, then very different conclusions would have been drawn. This observation is important because it highlights the biggest limitation of this report, in that there could be significant results for other countries but they were not observed because of a lack of reviews.  
+
+
+###Further research
+As previously discussed, the dataset used in this report is extremely rich and has huge potential for further research. This could include looking into specific grapes or wine types within each of the top 3 regions to see whether greater detail could be provided in terms of a positive correlation. However, the research with greatest value would be to clean up the location data to allow for more sophisticated spatial mapping.
+
+
+###References
+
+
+Dee-Wine. (2016). Wine Industry Today. Available: https://www.dee-wine.com/digital-marketing-boosts-direct-wine-sales/. Last accessed 30/12/2018. 
+
+GADM. (2018). GADM data. Available: https://gadm.org/data.html. Last accessed 30/12/2018.
+
+Go-Wine. (2018). Wine Facts. Available: https://www.go-wine.com/wine-facts . Last accessed 30/12/2018.
+
+Kaggle. (2017). Wine Reviews. Available: https://www.kaggle.com/zynicide/wine-reviews/home. Last accessed 30/12/2018.
+
+Piqueras-Fiszman, B & Spence, C. (2012). The weight of the bottle as a possible extrinsic cue with which to estimate the price (and quality) of the wine? Observed correlations. Food Quality and Preference. 25, 41–45.
+
+Statista. (2018). Wine consumption worldwide from 2000 to 2017 (in million hectoliters). Available: https://www.statista.com/statistics/232937/volume-of-global-wine-consumption/. Last accessed 30/12/2018.
+
+UN International Trade Statistics Knowledgebase. (2016). Country Code - ISO 3166-1 alpha-3. Available: https://unstats.un.org/unsd/tradekb/knowledgebase/country-code. Last accessed 30/12/2018.
+
+Wine Institute. (2017). World Wine Consumption by Country. Available: https://www.wineinstitute.org/resources/statistics/. Last accessed 30/12/2018.
+
+Wine Institute. (2017). World Wine Production by Country. Available: https://www.wineinstitute.org/resources/statistics/. Last accessed 30/12/2018.
+
+Zion Market Research. (2018). Global Wine Market Will Reach USD 423.59 Billion by 2023: Zion Market Research. Available: https://globenewswire.com/news-release/2018/04/09/1467083/0/en/Global-Wine-Market-Will-Reach-USD-423-59-Billion-by-2023-Zion-Market-Research.html. Last accessed 30/12/2018. 
+
+
+###Appendix 
+
+![Appendix 1: Table to show the number of reviews, r2 & r2 as a % for the provinces in Portugal. Note: any provinces with 10 or less reviews have been excluded from the model.](/Users/daisywain/Downloads/images-2/portugal_prov.png)
+
+![Appendix 2: Table to show the number of reviews, r2 & r2 as a % for the provinces in South Africa. Note: any provinces with 10 or less reviews have been excluded from the model.](/Users/daisywain/Downloads/images-2/africa_prov.png)
+
+![Appendix 3: Table to show the number of reviews, r2 & r2 as a % for the provinces in Italy. Note: any provinces with 10 or less reviews have been excluded from the model.](/Users/daisywain/Downloads/images-2/italy_prov.png)
+
+
+###R code
+
+```
+### GIS part 3 of submission
+```
+```r
+library(dplyr)
+library(ggplot2)
+library(gridExtra)
+library(effects)
+library(stringr)
+library(tidyr)
+library(httr)
+
+wine <- read.csv("winemag-data-130k-v2.csv")
+```
+```
+### Stage 1
+```
+```
+## remove duplicates of description
+```
+```r
+wine <- wine %>% 
+  mutate(duplicate = duplicated(description)) %>% 
+  filter(duplicate==FALSE) %>% 
+  select(-duplicate) 
+glimpse(wine)
+```
+
+```
+## top 10 countries by total amount of reviews
+```
+
+```r
+wineCtry <- wine %>% 
+  group_by(country) %>% 
+  summarise(total = n()) %>% 
+  arrange(desc(total)) %>% 
+  mutate(totpcnt = round(total/ sum(total), digits=7), accum = cumsum(totpcnt))
+wineCtry
+
+wineCtry %>% head(10) %>%
+  ggplot( aes(x= factor(country, levels = wineCtry$country[order(desc(wineCtry$totpcnt))]), y = total)) +
+  geom_col() + 
+  geom_text(aes(label = sprintf("%.1f %%", 100*totpcnt), y = total + 1500)) +
+  labs(x="Country", y="Total Reviews", title="Distribution of Wine Reviews by Top 10 Countries")
+```
+
+```
+## top 10 countries by average rating & price
+```
+
+```r
+wineRating = wine %>% 
+ group_by(country) %>%
+ summarise_at(vars(points), funs(points = mean(., na.rm=T))) %>%
+ arrange(desc(points)) %>%
+ head(10)
+
+ggplot(data=wineRating, aes(x=reorder(country,-points), y= points)) + 
+  geom_bar(stat="identity", fill = "navy") + 
+  coord_cartesian(ylim=c(85,92)) + 
+  labs(x="Countries", y="Rating", title="Top 10 Countries by Average Rating")
+
+winePrice2 = wine %>% 
+ group_by(country) %>%
+ summarise_at(vars(price), funs(price = mean(., na.rm=T))) %>%
+ arrange(desc(price)) %>%
+ head(10)
+
+ggplot(data=winePrice2, aes(x=reorder(country,-price), y= price)) + 
+  geom_bar(stat="identity", fill = "navy") +
+  labs(x="Countries", y="Price", title="Top 10 Countries by Average Price")
+```
+
+```
+##Top 10 most expensive wines, but watch out, there’s only 63 reviews for England
+``````
+
+```r
+winePrice = wine %>%
+ select(country, price) %>%
+ group_by(country) %>%
+ summarise(maxprice = max(price, na.rm = TRUE)) %>%
+ arrange(desc(maxprice)) %>%
+ head(10)
+
+ggplot(data=winePrice, aes(x=reorder(country,-price), y= price)) + 
+  geom_bar(stat="identity", fill = "red") + 
+  coord_cartesian(ylim=c(85,92)) + 
+  labs(x="Countries", y="Price", title="Top 10 Most Expensive Wines by Country")
+
+##World map summaries of average price and points 
+summary_stats <- read.csv("summary_stats.csv")
+library(rworldmap)
+```
+
+```
+##Join main data-table to ISO3 country codes
+```
+
+```r
+pointsMap <-joinCountryData2Map(summary_stats,nameJoinColumn = "ISO3", joinCode="ISO3")
+
+mapCountryData(pointsMap, nameColumnToPlot = 'avg_points',catMethod = 'pretty', numCats = 5, mapTitle="Average points per bottle of wine per country", colourPalette = ("terrain"))
+
+mapCountryData(pointsMap, nameColumnToPlot = 'avg_price',catMethod = 'fixedWidth', numCats = 5, mapTitle="Average cost of a bottle of wine per country", colourPalette = ("terrain"))
+```
+
+```
+### Stage 2
+```
+
+```
+## Distribution curve: points & price
+```
+
+```r
+q1=ggplot(wine, aes(x=points, col=I('gray'))) + 
+  geom_histogram(binwidth = 1, aes(y=..density..)) +
+  stat_function(fun=dnorm, args = list(mean = mean(wine$points), sd= sd(wine$points)), col = 'blue') 
+
+q4=ggplot(wine, aes(x=price, col=I('gray'))) + 
+  geom_histogram(binwidth = 1, aes(y=..density..)) +
+  stat_function(fun=dnorm, args = list(mean = mean(wine$price), sd= sd(wine$price)), col = 'blue') 
+q4 
+```
+
+```
+## boxplots: price & points
+```
+
+```r
+q2=wine %>% 
+  filter(country %in% head(wineCtry$country,10)) %>%
+  ggplot(aes(x=country, y=price)) + geom_boxplot() + 
+  stat_summary(fun.y = mean, geom = "point",color=I("blue"))
+
+q3=wine %>% 
+  filter(country %in% head(wineCtry$country,10)) %>%
+  ggplot(aes(x=country, y=points)) + geom_boxplot() + 
+  stat_summary(fun.y = mean, geom = "point",color=I("blue"))
+Q3
+```
+
+```
+#Points summary - are there any NAs?
+```
+
+```r
+Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+80.00   86.00   88.00   88.44   91.00  100.00
+Empty spaces:  0
+NAs:  0
+```
+
+```
+#Price summary - are there are NAs?
+```
+
+```r
+Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+4.00   17.00   25.00   35.62   42.00 3300.00    8388
+Empty spaces:  NA
+NAs:  8388
+```
+
+```
+## Portion of wines under $200 = 99%, remove outliers above $200
+```
+
+```r
+df <- wine %>% 
+  filter(!is.na(price))%>% 
+  select(price) %>%  
+  table()
+df1 <- prop.table(df) 
+cat("Portion of wines under $200: ", cumsum(df1)['200'])
+```
+
+```
+##Redo distribution curve under $200
+```
+
+```r
+wine2 = wine %>% filter(!is.na(price), price <=200)
+
+q6 <- wine2 %>%
+  ggplot(aes(x=price, col=I('gray'))) + 
+  geom_histogram(aes(y=..density..)) +
+  stat_function(fun=dnorm, args = list(mean = mean(wine2$price), sd= sd(wine2$price)), col = 'blue')
+q6
+```
+
+```
+##Redo boxplot for price under $200
+```
+
+```r
+q7 <- wine %>% 
+  filter(country %in% head(wineCtry$country,10), price <=200) %>%
+  ggplot(aes(x=country, y=price)) + geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  stat_summary(fun.y = mean, geom = "point",color=I("blue"))
+q7
+```
+
+```
+##Scatter plot: price Vs points
+```
+
+```r
+wine2 %>% 
+  ggplot(aes(x=points, y=price)) + 
+  geom_point(position="jitter", alpha=1/10) + 
+  geom_smooth(method="lm", se=F)
+```
+
+```
+### Stage 3
+##Statistics tests
+```
+
+```r
+library(rgdal)
+library(tidyverse)
+library(sf)
+
+newvar<-0
+recode<-function(variable,high,medium,low){
+  newvar[variable<=high]<-"High"
+  newvar[variable<=medium]<-"Medium"
+  newvar[variable<=low]<-"Low"
+  return(newvar)
+}
+```
+
+```r
+summary(wine$price)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   4.00   17.00   25.00   35.62   42.00 3300.00    8388 
+
+summary(wine2$price)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   4.00   17.00   25.00   33.56   42.00  200.00
+
+summary(wine$points)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  80.00   86.00   88.00   88.44   91.00  100.00 
+
+summary(wine2$points)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  80.00   86.00   88.00   88.38   91.00  100.00 
+```
+
+```
+##Take Max, 3rd Qu., 2st Qu
+```
+
+```r
+attach(wine2)
+wine2$price_recode <- recode(price,200,42.00,17.00)
+wine2$points_recode <- recode(points,100,91.00,86.00)
+```
+
+```r
+##Chi-squared
+chisq<-chisq.test(wine2$price_recode,wine2$points_recode)
+#observed counts
+chisq$observed
+                  wine2$points_recode
+wine2$price_recode  High   Low Medium
+            High   12378  1644  12981
+            Low      180 16606  12536
+            Medium  6244 12471  35862
+#expected counts
+chisq$expected
+                  wine2$points_recode
+wine2$price_recode     High       Low   Medium
+            High   4578.009  7480.110 14944.88
+            Low    4971.166  8122.497 16228.34
+            Medium 9252.825 15118.393 30205.78
+```
+
+```
+#Distribution plots
+```
+
+```r
+library(ggplot2)
+varlist <- data.frame(cbind(lapply(wine2, class)))
+varlist$id <- seq(1,nrow(varlist))
+qplot(price, data = wine2, geom = "histogram")
+
+library(ggplot2)
+varlist <- data.frame(cbind(lapply(wine2, class)))
+varlist$id <- seq(1,nrow(varlist))
+qplot(points, data = wine2, geom = "histogram")
+```
+
+```
+#price, points plots
+```
+
+```r
+qplot(points, price, data = wine2, geom = "point") + stat_smooth(method="lm", se=FALSE, size=1)
+library(broom)
+```
+
+```
+#linear regression model for countries
+```
+
+```r
+model1 <- lm(points ~ price, data = wine2)
+#write the results out into a dataframe
+model1_res <- tidy(model1)
+#examine the results
+summary(model1)
+```
+
+```
+##Results of model1
+Call:
+lm(formula = points ~ price, data = wine2)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-15.4313  -1.7477   0.0531   1.8617   9.9281 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 8.615e+01  1.294e-02  6656.1   <2e-16 ***
+price       6.641e-02  3.092e-04   214.8   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 2.577 on 110900 degrees of freedom
+Multiple R-squared:  0.2938,	Adjusted R-squared:  0.2938 
+F-statistic: 4.614e+04 on 1 and 110900 DF,  p-value: < 2.2e-16
+```
+
+```r
+model2 <- lm(points ~ price, data = wine2[which(wine2$country == 'US'), ])
+model2_res <- tidy(model2)
+summary(model2)
+```
+
+```
+##Results of model2
+Call:
+lm(formula = points ~ price, data = wine2[which(wine2$country == 
+    "US"), ])
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-14.3360  -1.8352   0.1072   2.0543   9.9175 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 8.607e+01  2.262e-02    3805   <2e-16 ***
+price       6.843e-02  5.265e-04     130   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 2.733 on 50129 degrees of freedom
+Multiple R-squared:  0.252,	Adjusted R-squared:  0.252 
+F-statistic: 1.689e+04 on 1 and 50129 DF,  p-value: < 2.2e-16
+```
+
+```r
+model3 <- lm(points ~ price, data = wine2[which(wine2$country == 'France'), ])
+model3_res <- tidy(model3)
+summary(model3)
+
+model4 <- lm(points ~ price, data = wine2[which(wine2$country == 'Italy'), ])
+model4_res <- tidy(model4)
+summary(model4)
+
+model5 <- lm(points ~ price, data = wine2[which(wine2$country == 'Spain'), ])
+model5_res <- tidy(model5)
+summary(model5)
+
+model6 <- lm(points ~ price, data = wine2[which(wine2$country == 'Portugal'), ])
+model6_res <- tidy(model6)
+summary(model6)
+
+model7 <- lm(points ~ price, data = wine2[which(wine2$country == 'Chile'), ])
+model7_res <- tidy(model7)
+summary(model7)
+
+model8 <- lm(points ~ price, data = wine2[which(wine2$country == 'Argentina'), ])
+model8_res <- tidy(model8)
+summary(model8)
+
+model9 <- lm(points ~ price, data = wine2[which(wine2$country == 'Austria'), ])
+model9_res <- tidy(model9)
+summary(model9)
+
+model10 <- lm(points ~ price, data = wine2[which(wine2$country == 'Australia'), ])
+model10_res <- tidy(model10)
+summary(model10)
+
+model11 <- lm(points ~ price, data = wine2[which(wine2$country == 'Germany'), ])
+model11_res <- tidy(model11)
+summary(model11)
+
+model12 <- lm(points ~ price, data = wine2[which(wine2$country == 'South Africa'), ])
+model12_res <- tidy(model12)
+summary(model12)
+
+model13 <- lm(points ~ price, data = wine2[which(wine2$country == 'New Zealand'), ])
+model13_res <- tidy(model13)
+summary(model13)
+
+model14 <- lm(points ~ price, data = wine2[which(wine2$country == 'Israel'), ])
+model14_res <- tidy(model14)
+summary(model14)
+
+model15 <- lm(points ~ price, data = wine2[which(wine2$country == 'Greece'), ])
+model15_res <- tidy(model15)
+summary(model15)
+
+model16 <- lm(points ~ price, data = wine2[which(wine2$country == 'Canada'), ])
+model6_res <- tidy(model16)
+summary(model16)
+
+model17 <- lm(points ~ price, data = wine2[which(wine2$country == 'Bulgaria'), ])
+model17_res <- tidy(model17)
+summary(model17)
+
+model18 <- lm(points ~ price, data = wine2[which(wine2$country == 'Hungary'), ])
+model18_res <- tidy(model18)
+summary(model18)
+
+model19 <- lm(points ~ price, data = wine2[which(wine2$country == 'Romania'), ])
+model19_res <- tidy(model19)
+summary(model19)
+
+model20 <- lm(points ~ price, data = wine2[which(wine2$country == 'Uruguay'), ])
+model20_res <- tidy(model20)
+summary(model20)
+
+model21 <- lm(points ~ price, data = wine2[which(wine2$country == 'Turkey'), ])
+model21_res <- tidy(model21)
+summary(model21)
+
+model22 <- lm(points ~ price, data = wine2[which(wine2$country == 'Slovenia'), ])
+model22_res <- tidy(model22)
+summary(model22)
+
+model23 <- lm(points ~ price, data = wine2[which(wine2$country == 'Georgia'), ])
+model23_res <- tidy(model23)
+summary(model23)
+
+model24 <- lm(points ~ price, data = wine2[which(wine2$country == 'Croatia'), ])
+model24_res <- tidy(model24)
+summary(model24)
+
+model25 <- lm(points ~ price, data = wine2[which(wine2$country == 'Mexico'), ])
+model25_res <- tidy(model25)
+summary(model25)
+
+model26 <- lm(points ~ price, data = wine2[which(wine2$country == 'England'), ])
+model26_res <- tidy(model26)
+summary(model26)
+
+model27 <- lm(points ~ price, data = wine2[which(wine2$country == ''), ])
+model27_res <- tidy(model27)
+summary(model27)
+
+model28 <- lm(points ~ price, data = wine2[which(wine2$country == 'Moldova'), ])
+model28_res <- tidy(model28)
+summary(model28)
+
+model29 <- lm(points ~ price, data = wine2[which(wine2$country == 'Brazil'), ])
+model29_res <- tidy(model29)
+summary(model29)
+
+model30 <- lm(points ~ price, data = wine2[which(wine2$country == 'Lebanon'), ])
+model10_res <- tidy(model30)
+summary(model30)
+
+model31 <- lm(points ~ price, data = wine2[which(wine2$country == 'Morocco'), ])
+model31_res <- tidy(model31)
+summary(model31)
+
+model32 <- lm(points ~ price, data = wine2[which(wine2$country == 'Peru'), ])
+model32_res <- tidy(model32)
+summary(model32)
+
+model33 <- lm(points ~ price, data = wine2[which(wine2$country == 'Ukraine'), ])
+model33_res <- tidy(model33)
+summary(model33)
+
+model34 <- lm(points ~ price, data = wine2[which(wine2$country == 'Czech Republic'), ])
+model34_res <- tidy(model34)
+summary(model34)
+
+model35 <- lm(points ~ price, data = wine2[which(wine2$country == 'Macedonia'), ])
+model25_res <- tidy(model35)
+summary(model35)
+
+model36 <- lm(points ~ price, data = wine2[which(wine2$country == 'Cyprus'), ])
+model36_res <- tidy(model36)
+summary(model36)
+
+model37 <- lm(points ~ price, data = wine2[which(wine2$country == 'India'), ])
+model37_res <- tidy(model37)
+summary(model37)
+
+model38 <- lm(points ~ price, data = wine2[which(wine2$country == 'Serbia'), ])
+model38_res <- tidy(model38)
+summary(model38)
+
+model39 <- lm(points ~ price, data = wine2[which(wine2$country == 'Switzerland'), ])
+model39_res <- tidy(model39)
+summary(model39)
+
+model40 <- lm(points ~ price, data = wine2[which(wine2$country == 'Luxembourg'), ])
+model10_res <- tidy(model40)
+summary(model40)
+
+model41 <- lm(points ~ price, data = wine2[which(wine2$country == 'Armenia'), ])
+model41_res <- tidy(model41)
+summary(model41)
+
+model42 <- lm(points ~ price, data = wine2[which(wine2$country == 'Bosnia and Herzegovina'), ])
+model42_res <- tidy(model42)
+summary(model42)
+
+model43 <- lm(points ~ price, data = wine2[which(wine2$country == 'China'), ])
+model43_res <- tidy(model43)
+summary(model43)
+
+model44 <- lm(points ~ price, data = wine2[which(wine2$country == 'Egypt'), ])
+model44_res <- tidy(model44)
+summary(model44)
+
+model45 <- lm(points ~ price, data = wine2[which(wine2$country == 'Slovakia'), ])
+model45_res <- tidy(model45)
+summary(model45)
+```
+
+```
+#Looking at the Top 3 most significant results
+```
+
+```r
+italy = wine2 %>% filter(country == 'Italy')
+portugal = wine2 %>% filter(country == 'Portugal')
+south_africa = wine2 %>% filter(country == 'South Africa')
+```
+
+```
+#List of provinces for top 3
+```
+
+```r
+italyProv <- italy %>% 
+group_by(province) %>% 
+summarise(total = n()) %>% 
+arrange(desc(total)) %>% 
+mutate(totpcnt = round(total/ sum(total), digits=7), accum = cumsum(totpcnt))
+
+portugalProv <- portugal %>% 
+group_by(province) %>% 
+summarise(total = n()) %>% 
+arrange(desc(total)) %>% 
+mutate(totpcnt = round(total/ sum(total), digits=7), accum = cumsum(totpcnt))
+
+south_africaProv <- south_africa %>% 
+group_by(province) %>% 
+summarise(total = n()) %>% 
+arrange(desc(total)) %>% 
+mutate(totpcnt = round(total/ sum(total), digits=7), accum = cumsum(totpcnt))
+```
+
+```
+#Linear regression models for Portugal
+```
+
+```r
+model1.1 <- lm(points ~ price, data = portugal[which(portugal$province == 'Douro'), ])
+model1.1_res <- tidy(model1.1)
+summary(model1.1)
+
+model1.2 <- lm(points ~ price, data = portugal[which(portugal$province == 'Alentejano'), ])
+model1.2_res <- tidy(model1.2)
+summary(model1.2)
+
+model1.3 <- lm(points ~ price, data = portugal[which(portugal$province == 'Tejo'), ])
+model1.3_res <- tidy(model1.3)
+summary(model1.3)
+
+model1.4 <- lm(points ~ price, data = portugal[which(portugal$province == 'Lisboa'), ])
+model1.4_res <- tidy(model1.4)
+summary(model1.4)
+
+model1.5 <- lm(points ~ price, data = portugal[which(portugal$province == 'Port'), ])
+model1.5_res <- tidy(model1.5)
+summary(model1.5)
+
+model1.6 <- lm(points ~ price, data = portugal[which(portugal$province == 'Vinho Verde'), ])
+model1.6_res <- tidy(model1.6)
+summary(model1.6)
+
+model1.7 <- lm(points ~ price, data = portugal[which(portugal$province == 'Dão'), ])
+model1.7_res <- tidy(model1.7)
+summary(model1.7)
+
+model1.8 <- lm(points ~ price, data = portugal[which(portugal$province == 'Alentejo'), ])
+model1.8_res <- tidy(model1.8)
+summary(model1.8)
+
+model1.9 <- lm(points ~ price, data = portugal[which(portugal$province == 'Bairrada'), ])
+model1.9_res <- tidy(model1.9)
+summary(model1.9)
+
+model1.10 <- lm(points ~ price, data = portugal[which(portugal$province == 'Península de Setúbal'), ])
+model1.10_res <- tidy(model1.10)
+summary(model1.10)
+
+model1.11 <- lm(points ~ price, data = portugal[which(portugal$province == 'Minho'), ])
+model1.11_res <- tidy(model1.11)
+summary(model1.11)
+
+model1.12 <- lm(points ~ price, data = portugal[which(portugal$province == 'Estremadura'), ])
+model1.12_res <- tidy(model1.12)
+summary(model1.12)
+
+model1.13 <- lm(points ~ price, data = portugal[which(portugal$province == 'Beira Interior'), ])
+model1.13_res <- tidy(model1.13)
+summary(model1.13)
+
+model1.14 <- lm(points ~ price, data = portugal[which(portugal$province == 'Duriense'), ])
+model1.14_res <- tidy(model1.14)
+summary(model1.14)
+
+model1.15 <- lm(points ~ price, data = portugal[which(portugal$province == 'Palmela'), ])
+model1.15_res <- tidy(model1.15)
+summary(model1.15)
+
+model1.16 <- lm(points ~ price, data = portugal[which(portugal$province == 'Portuguese Table Wine'), ])
+model1.16_res <- tidy(model1.16)
+summary(model1.16)
+
+model1.17 <- lm(points ~ price, data = portugal[which(portugal$province == 'Bucelas'), ])
+model1.17_res <- tidy(model1.17)
+summary(model1.17)
+
+model1.18 <- lm(points ~ price, data = portugal[which(portugal$province == 'Ribatejano'), ])
+model1.18_res <- tidy(model1.18)
+summary(model1.18)
+
+model1.19 <- lm(points ~ price, data = portugal[which(portugal$province == 'Beiras'), ])
+model1.19_res <- tidy(model1.19)
+summary(model1.19)
+
+model1.20 <- lm(points ~ price, data = portugal[which(portugal$province == 'Setubal'), ])
+model1.20_res <- tidy(model1.20)
+summary(model1.20)
+```
+
+```
+## Linear regression models for South Africa
+```
+
+```r
+model2.1 <- lm(points ~ price, data = south_africa[which(south_africa$province == 'Stellenbosch'), ])
+model2.1_res <- tidy(model2.1)
+summary(model2.1)
+
+model2.2 <- lm(points ~ price, data = south_africa[which(south_africa$province == 'Western Cape'), ])
+model2.2_res <- tidy(model2.2)
+summary(model2.2)
+
+model2.3 <- lm(points ~ price, data = south_africa[which(south_africa$province == 'Coastal Region'), ])
+model2.3_res <- tidy(model2.3)
+summary(model2.3)
+
+model2.4 <- lm(points ~ price, data = south_africa[which(south_africa$province == 'Robertson'), ])
+model2.4_res <- tidy(model2.4)
+summary(model2.4)
+
+model2.5 <- lm(points ~ price, data = south_africa[which(south_africa$province == 'Paarl'), ])
+model2.5_res <- tidy(model2.5)
+summary(model2.5)
+
+model2.6 <- lm(points ~ price, data = south_africa[which(south_africa$province == 'Swartland'), ])
+model2.6_res <- tidy(model2.6)
+summary(model2.6)
+
+model2.7 <- lm(points ~ price, data = south_africa[which(south_africa$province == 'Elgin'), ])
+model2.7_res <- tidy(model2.7)
+summary(model2.7)
+
+model2.8 <- lm(points ~ price, data = south_africa[which(south_africa$province == 'Simonsberg-Stellenbosch'), ])
+model2.8_res <- tidy(model2.8)
+summary(model2.8)
+
+model2.9 <- lm(points ~ price, data = south_africa[which(south_africa$province == 'Wellington'), ])
+model2.9_res <- tidy(model2.9)
+summary(model2.9)
+
+model2.10 <- lm(points ~ price, data = south_africa[which(south_africa$province == 'Franschhoek'), ])
+model2.10_res <- tidy(model2.10)
+summary(model2.10)
+
+model2.11 <- lm(points ~ price, data = south_africa[which(south_africa$province == 'Constantia'), ])
+model2.11_res <- tidy(model2.11)
+summary(model2.11)
+
+model2.12 <- lm(points ~ price, data = south_africa[which(south_africa$province == 'Walker Bay'), ])
+model2.12_res <- tidy(model2.12)
+summary(model2.12)
+
+model2.13 <- lm(points ~ price, data = south_africa[which(south_africa$province == 'Durbanville'), ])
+model2.13_res <- tidy(model2.13)
+summary(model2.13)
+```
+
+```
+## Linear regression models for Italy
+```
+
+```r
+model3.1 <- lm(points ~ price, data = italy[which(italy$province == 'Tuscany'), ])
+model3.1_res <- tidy(model3.1)
+summary(model3.1)
+
+model3.2 <- lm(points ~ price, data = italy[which(italy$province == 'Piedmont'), ])
+model3.2_res <- tidy(model3.2)
+summary(model3.2)
+
+model3.3 <- lm(points ~ price, data = italy[which(italy$province == 'Veneto'), ])
+model3.3_res <- tidy(model3.3)
+summary(model3.3)
+
+model3.4 <- lm(points ~ price, data = italy[which(italy$province == 'Northeastern Italy'), ])
+model3.4_res <- tidy(model3.4)
+summary(model3.4)
+
+model3.5 <- lm(points ~ price, data = italy[which(italy$province == 'Sicily & Sardinia'), ])
+model3.5_res <- tidy(model3.5)
+summary(model3.5)
+
+model3.6 <- lm(points ~ price, data = italy[which(italy$province == 'Southern Italy'), ])
+model3.6_res <- tidy(model3.6)
+summary(model3.6)
+
+model3.7 <- lm(points ~ price, data = italy[which(italy$province == 'Central Italy'), ])
+model3.7_res <- tidy(model3.7)
+summary(model3.7)
+
+model3.8 <- lm(points ~ price, data = italy[which(italy$province == 'Lombardy'), ])
+model3.8_res <- tidy(model3.8)
+summary(model3.8)
+
+model3.9 <- lm(points ~ price, data = italy[which(italy$province == 'Italy Other'), ])
+model3.9_res <- tidy(model3.9)
+summary(model3.9)
+
+model3.10 <- lm(points ~ price, data = italy[which(italy$province == 'Northwestern Italy'), ])
+model3.10_res <- tidy(model3.10)
+summary(model2.10)
+```
+
+```
+## Italy map summaries
+```
+
+```r
+mapCountryData(italy_map_joined, nameColumnToPlot='r2')
+
+tm_shape(italy_map_joined) +
+    tm_polygons(c("r2"), 
+        style=c("jenks"),
+        palette=("YlOrBr"),
+        title=c("r2 value"))
+tm_shape(italy_map_joined) +
+    tm_polygons(c("X."), 
+        style=c("jenks"),
+        palette=("YlOrBr"),
+        title=c("r2 as a %"))
+```
